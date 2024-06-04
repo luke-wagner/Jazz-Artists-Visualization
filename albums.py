@@ -41,11 +41,11 @@ with open('artists.csv', newline='') as input_file:
             
             for album_header in album_headers:
                 html = u""
-                for tag in album_header.next_siblings:
-                    if tag.name == "h2" or tag.name == "h3":
+                for element in album_header.next_siblings:
+                    if element.name == "h2" or element.name == "h3":
                         break
                     else:
-                        html += str(tag)
+                        html += str(element)
 
                 followingHTMLs.append(html)
 
