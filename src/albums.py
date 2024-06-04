@@ -4,10 +4,10 @@ import requests
 from bs4 import BeautifulSoup
 
 
-with open('artists.csv', newline='') as input_file:
+with open('data/artists.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
 
-    with open('albums.csv', 'w') as out_file:
+    with open('data/albums.csv', 'w') as out_file:
         out_file.write('Artist,Header,Relative Link,Full Link\n')
         for row in reader:
             print(row['Artist'], row['Link'])

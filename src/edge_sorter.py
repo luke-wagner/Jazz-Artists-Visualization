@@ -1,9 +1,9 @@
 import pandas as pd
 import csv
 
-df = pd.read_csv('edge_list.csv',on_bad_lines='skip', encoding='latin-1')
+df = pd.read_csv('data/edge_list.csv',on_bad_lines='skip', encoding='latin-1')
 df = df.sort_values(['Weight', 'Source', 'Target'], ascending=[False, True, True])
-df.to_csv('edges_sorted.csv', index=False)
+df.to_csv('data/edges_sorted.csv', index=False)
 
 '''
 with open('temp.csv', newline='') as input_file:

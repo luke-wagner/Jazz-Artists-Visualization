@@ -5,12 +5,12 @@ import requests
 from bs4 import BeautifulSoup
 from colorama import Fore, Back, Style
 
-with open('albums_sorted.csv', newline='') as input_file:
+with open('data/albums_sorted.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
 
     edge_dict = {}
 
-    with open('edge_list.csv', 'w', newline='') as csv_file:  
+    with open('data/edge_list.csv', 'w', newline='') as csv_file:  
         writer = csv.writer(csv_file)
         lastArtist = ""
 
