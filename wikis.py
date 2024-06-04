@@ -6,8 +6,8 @@ with open('top_100.txt', 'r') as f:
     artists = [line.strip() for line in f]
 
 # Search for each artist's discography on Wikipedia
-with open('output.csv', 'w') as f:
-    f.write('Artist,URL\n')
+with open('artists.csv', 'w') as f:
+    f.write('Artist,Link\n')
 
     for artist in artists:
         # Construct the Wikipedia search URL

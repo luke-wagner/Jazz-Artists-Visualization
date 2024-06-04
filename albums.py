@@ -4,15 +4,15 @@ import requests
 from bs4 import BeautifulSoup
 
 
-with open('output.csv', newline='') as input_file:
+with open('artists.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
 
-    with open('links.csv', 'w') as out_file:
-        out_file.write('Artist,Header,Link\n')
+    with open('albums.csv', 'w') as out_file:
+        out_file.write('Artist,Header,Relative Link,Full Link\n')
         for row in reader:
-            print(row['Artist'], row['URL'])
+            print(row['Artist'], row['Link'])
 
-            page = requests.get(row['URL'])
+            page = requests.get(row['Link'])
             soup = BeautifulSoup(page.content, "html.parser")
 
             headers = soup.find_all('h2')
@@ -58,9 +58,25 @@ with open('output.csv', newline='') as input_file:
                 links = [] # 1 dimensional array, all the links associated with this html block
                 childSoup = BeautifulSoup(html, "html.parser")
                 for link_item in childSoup.find_all('a'):
-                    link = link_item.get('href')
-                    if "/wiki" in link: # we only want wiki links
-                        links.append(link)
+                    link = link_item.get('href').replace(',', '®')
+                    full_link = "https://en.wikipedia.org" + link
+
+                    if "/wiki" not in link: # we only want wiki links
+                        continue
+
+                    try:
+                        link_page = requests.get(full_link)
+                    except:
+                        print("ERROR reading link: " + full_link)
+                        continue
+
+                    link_soup = BeautifulSoup(link_page.content, "html.parser")
+                    headers = link_soup.find_all('h2')
+                    headers += link_soup.find_all('h3')
+                    for header in headers:
+                        if 'personnel' in header.text.lower():
+                            links.append(link)
+                    
                 followingLinks.append(links)
 
             for i in range(len(album_headers)):
