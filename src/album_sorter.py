@@ -2,7 +2,7 @@ import pandas as pd
 import csv
 import os
 
-df = pd.read_csv('data/albums.csv',on_bad_lines='skip')
+df = pd.read_csv('data/albums.csv',on_bad_lines='skip', encoding='latin-1')
 df = df.sort_values(['Artist', 'Header', 'Relative Link', 'Full Link'], ascending=[True, True, True, True])
 df.to_csv('data/temp.csv', index=False)
 

@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # Read the list of artists from top_100.txt
-with open('top_100.txt', 'r') as f:
+with open('artists.txt', 'r') as f:
     artists = [line.strip() for line in f]
 
 # Search for each artist's discography on Wikipedia
