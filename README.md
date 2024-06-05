@@ -17,6 +17,10 @@ You can view the node and edge lists used to create this visualization in the `d
 
 This project was inspired by the project ["Visualizing Twitch Communities"](https://github.com/KiranGershenfeld/VisualizingTwitchCommunities) by Kiran Gershenfeld.
 
+## Limitations:
+
+I tried to scale nodes by artist popularity, but Google search trend data might not be the best measure of popularity. I chose this metric because it was easy to program and seems to provide semi-accurate results. However, there may be more accurate metrics to explore.
+
 ## How to Build the Project:
 
 I have included the node and edge lists used to create the graph in the data folder. However, if you wish to build out the data set programmatically, follow the instructions below.
