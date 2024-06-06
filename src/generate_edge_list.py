@@ -47,7 +47,7 @@ with open('data/albums.csv', newline='') as input_file:
             page = requests.get(row['Full Link'])
             soup = BeautifulSoup(page.content, "html.parser")
 
-            album_title = soup.title.string
+            album_title = soup.title.string.replace(" - Wikipedia", "")
 
             personnel_header = soup.find('span', id='Personnel')
 
@@ -60,7 +60,7 @@ with open('data/albums.csv', newline='') as input_file:
             followingLists = personnel_header.find_next_siblings("ul")
 
             if followingLists == []:
-                console_manager.write_error(str("NO LISTS FOUND FOR ALBUM: " + album_title))
+                console_manager.write_error(str("NO PERSONNEL LISTS FOUND FOR ALBUM: " + album_title))
                 continue
 
             print(soup.title.string)

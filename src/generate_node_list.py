@@ -10,10 +10,6 @@ import sys
 
 import console_manager
 
-# To use shell automation:
-for line in sys.stdin:
-    sys.stdout.write(line)
-
 print("\nGenerating node list...\n")
 user_input = input("Hide console_output? (recommended) (y/n) ")
 
