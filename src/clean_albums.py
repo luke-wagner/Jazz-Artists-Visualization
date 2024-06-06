@@ -1,4 +1,8 @@
-# Remove duplicate lines from albums.csv
+# File: clean_albums.py
+# Author: Luke Wagner
+# Description:
+# Sort albums.csv and remove duplicate lines
+# -------------------------------------------------------------------------------------------------
 
 import pandas as pd
 import csv
@@ -18,29 +22,21 @@ if remaining_input != '':
     print(remaining_input)
 
 if user_input.lower() != 'y':
-    quit()
+    quit() # do not continue running script without user confirmation
 
+# Use pandas to sort albums.csv
 df = pd.read_csv('data/albums.csv',on_bad_lines='skip', encoding='latin-1')
 df = df.sort_values(['Artist', 'Header', 'Relative Link', 'Full Link'], ascending=[True, True, True, True])
-df.to_csv('data/temp.csv', index=False)
+df.to_csv('data/albums.csv', index=False)
 
-with open('data/temp.csv', newline='') as input_file:
+# Read in content of albums.csv and create set of unique rows
+with open('data/albums.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
-    rows = list(reader)
+    unique_rows = list(reader)
 
-    with open('data/albums.csv', 'w') as out_file:
-        out_file.write('Artist,Header,Relative Link,Full Link\n')
+# Write each unique row to albums.csv
+with open('data/albums.csv', 'w') as out_file:
+    out_file.write('Artist,Header,Relative Link,Full Link\n') # write header
 
-        i = 0
-        while i < len(rows):
-            for j in range(i + 1, len(rows)):
-                if j >= len(rows):
-                    break
-                if rows[i] != rows[j]:
-                    out_file.write(f'{rows[i]["Artist"]},{rows[i]["Header"]},{rows[i]["Relative Link"]},{rows[i]["Full Link"]}\n')
-                    break
-                else:
-                    i = j
-            i += 1
-
-os.remove('data/temp.csv')
+    for row in unique_rows:
+        out_file.write(f'{row["Artist"]},{row["Header"]},{row["Relative Link"]},{row["Full Link"]}\n')

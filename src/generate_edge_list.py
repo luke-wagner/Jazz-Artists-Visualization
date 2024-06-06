@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from colorama import Fore, Back, Style
 import sys
 
-import console_manager
+import console_manager # custom module for console output
 
 print("\nGenerating edge list...\n")
 user_input = input("Hide console output? (recommended) (y/n) ")

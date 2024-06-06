@@ -8,7 +8,7 @@ from colorama import Fore, Back, Style
 import time
 import sys
 
-import console_manager
+import console_manager # custom module for console output
 
 print("\nGenerating node list...\n")
 user_input = input("Hide console_output? (recommended) (y/n) ")
