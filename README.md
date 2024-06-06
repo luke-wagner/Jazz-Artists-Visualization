@@ -36,7 +36,7 @@ I have included the node and edge lists used to create the graph in the data fol
 
     **In PowerShell admin window at project directory:**
 
-    ```bash build_automated.sh```
+    ```bash ./build_automated.sh```
 
 3. Check out the new files created in the `data` folder
 
