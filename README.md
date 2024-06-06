@@ -23,14 +23,15 @@ I tried to scale nodes by artist popularity using Google search trend, but this 
 
 ## How to Build the Project:
 
-I have included the node and edge lists used to create the graph in the data folder. However, if you wish to build out the data set programmatically, follow the instructions below.
+I have included the node and edge lists used to create the graph in the data folder. However, if you wish to build out the data set programmatically, follow the instructions below. **You must have [conda (package manager)](https://docs.conda.io/projects/conda/en/stable/) installed to build the project.**
 
 ### Instructions:
-1. Run `env_config.sh` to set up the python virtual environment and install necessary dependencies
+1. Run `env_config.ps1` to set up the python virtual environment and install necessary dependencies (You may need to [change the PowerShell execution policy](https://lazyadmin.nl/powershell/running-scripts-is-disabled-on-this-system/) to do this)
 2. Run `build_manual.sh` or `build_automated.sh` to execute all necessary python scripts. **This will take a while; the data generation process is LENGTHY.**
 3. Check out the new files created in the `data` folder
 
 ## Tools Used:
+* [conda](https://docs.conda.io/projects/conda/en/stable/): Package and environment manager
 * [pandas (python library)](https://pandas.pydata.org/): Data analysis / manipulation
 * [BeautifulSoup (python library)](https://pypi.org/project/beautifulsoup4/): Web scraping
 * [Gephi](https://gephi.org/): Data visualization
