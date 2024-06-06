@@ -5,8 +5,6 @@
 # -------------------------------------------------------------------------------------------------
 
 import pandas as pd
-import csv
-import os
 from colorama import Fore, Back, Style
 import sys
 
@@ -24,19 +22,23 @@ if remaining_input != '':
 if user_input.lower() != 'y':
     quit() # do not continue running script without user confirmation
 
+# Read in content of albums.csv and create set of unique rows
+with open('data/albums.csv', newline='') as input_file:
+    lines = input_file.readlines()
+    header = lines[0] # grab header from lines array, don't include in set
+    unique_lines = set(lines[1:])
+
+with open('data/albums.csv', 'w') as out_file:
+    out_file.write(header.strip() + '\n') # write header
+
+    # Write each unique line to albums.csv
+    for line in unique_lines:
+        line = line.strip()
+        out_file.write(line + '\n')
+
 # Use pandas to sort albums.csv
 df = pd.read_csv('data/albums.csv',on_bad_lines='skip', encoding='latin-1')
 df = df.sort_values(['Artist', 'Header', 'Relative Link', 'Full Link'], ascending=[True, True, True, True])
+
+# Overwrite albums.csv with sorted dataframe
 df.to_csv('data/albums.csv', index=False)
-
-# Read in content of albums.csv and create set of unique rows
-with open('data/albums.csv', newline='') as input_file:
-    reader = csv.DictReader(input_file)
-    unique_rows = list(reader)
-
-# Write each unique row to albums.csv
-with open('data/albums.csv', 'w') as out_file:
-    out_file.write('Artist,Header,Relative Link,Full Link\n') # write header
-
-    for row in unique_rows:
-        out_file.write(f'{row["Artist"]},{row["Header"]},{row["Relative Link"]},{row["Full Link"]}\n')
