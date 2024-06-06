@@ -7,7 +7,7 @@ from colorama import Fore, Back, Style
 with open('artists.txt', 'r') as f:
     artists_from_list = [line.strip() for line in f]
 
-pd = pd.read_csv('data/edge_list_clean.csv',on_bad_lines='skip', encoding='latin-1')
+pd = pd.read_csv('data/edge_list.csv',on_bad_lines='skip', encoding='latin-1')
 
 sources = set(pd['Source'].tolist())
 targets = set(pd['Target'].tolist())

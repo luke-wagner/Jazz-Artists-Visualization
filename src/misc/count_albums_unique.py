@@ -21,7 +21,7 @@ print("Number of unique albums: " + str(len(links_sorted)))
 
 user_input = input("Generate album_list.txt? (y/n) ")
 
-if user_input != 'y':
+if user_input.lower() != 'y':
     quit()
 
 with open ('album_list.txt', 'w') as f:

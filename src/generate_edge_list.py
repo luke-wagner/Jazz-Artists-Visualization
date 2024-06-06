@@ -1,11 +1,28 @@
-# For each album in albums_sorted.csv, append an edge between the artist and the other personnel on the album
+# For each album in albums.csv, append an edge between the artist and the other personnel on the album
 
 import csv
 import requests
 from bs4 import BeautifulSoup
 from colorama import Fore, Back, Style
+import sys
 
-with open('data/albums_sorted.csv', newline='') as input_file:
+import console_manager
+
+print("\nGenerating edge list...\n")
+user_input = input("Hide console output? (recommended) (y/n) ")
+
+# If automated, remaining input will specify what to print to console
+remaining_input = sys.stdin.read()
+if remaining_input != '':
+    remaining_input = remaining_input.strip()
+    print(remaining_input)
+
+if user_input.lower() == 'y':
+    console_manager.console_out_off()
+else:
+    console_manager.console_out_on()
+
+with open('data/albums.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
 
     edge_dict = {}
@@ -23,19 +40,19 @@ with open('data/albums_sorted.csv', newline='') as input_file:
                     try:
                         writer.writerow([key[0], key[1], value])
                     except:
-                        print(Fore.RED, "ERROR: PROBLEM WRITING EDGE '(" + key[0] + ", " + key[1] + "): " + str(value))
-                        print(Style.RESET_ALL, end="")
+                        console_manager.write_error(str("PROBLEM WRITING EDGE '(" + key[0] + ", " + key[1] + "): " + str(value)))
 
                 edge_dict = {} # clear edge dict
 
             page = requests.get(row['Full Link'])
             soup = BeautifulSoup(page.content, "html.parser")
 
+            album_title = soup.title.string
+
             personnel_header = soup.find('span', id='Personnel')
 
             if personnel_header is None:
-                print(Fore.RED,"ERROR: PERSONNEL HEADER NOT FOUND")
-                print(Style.RESET_ALL, end="")
+                console_manager.write_error(str("PERSONNEL HEADER NOT FOUND FOR ALBUM: " + album_title))
                 continue
             else:
                 personnel_header = personnel_header.parent
@@ -43,8 +60,7 @@ with open('data/albums_sorted.csv', newline='') as input_file:
             followingLists = personnel_header.find_next_siblings("ul")
 
             if followingLists == []:
-                print(Fore.RED, "ERROR: NO LISTS FOUND")
-                print(Style.RESET_ALL, end="")
+                console_manager.write_error(str("NO LISTS FOUND FOR ALBUM: " + album_title))
                 continue
 
             print(soup.title.string)

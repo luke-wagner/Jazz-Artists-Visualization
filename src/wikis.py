@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+print("\nFinding wiki links for all artists...")
+
 # Read the list of artists from top_100.txt
 with open('artists.txt', 'r') as f:
     artists = [line.strip() for line in f]

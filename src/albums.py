@@ -2,7 +2,24 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
+import sys
 
+import console_manager
+
+print("\nFinding artist albums...\n")
+user_input = input("Show console output? (recommended) (y/n) ")
+
+# If automated, remaining input will specify what to print to console
+remaining_input = sys.stdin.read()
+if remaining_input != '':
+    remaining_input = remaining_input.strip()
+    print(remaining_input)
+
+if user_input.lower() == 'y':
+    console_manager.console_out_on()
+    print()
+else:
+    console_manager.console_out_off()
 
 with open('data/artists.csv', newline='') as input_file:
     reader = csv.DictReader(input_file)
@@ -10,7 +27,7 @@ with open('data/artists.csv', newline='') as input_file:
     with open('data/albums.csv', 'w') as out_file:
         out_file.write('Artist,Header,Relative Link,Full Link\n')
         for row in reader:
-            print(row['Artist'], row['Link'])
+            print("Looking at albums for: " + row['Artist'] + ' ', end='')
 
             page = requests.get(row['Link'])
             soup = BeautifulSoup(page.content, "html.parser")
@@ -67,7 +84,7 @@ with open('data/artists.csv', newline='') as input_file:
                     try:
                         link_page = requests.get(full_link)
                     except:
-                        print("ERROR reading link: " + full_link)
+                        console_manager.write_error(str("PROBLEM READING LINK: " + full_link))
                         continue
 
                     link_soup = BeautifulSoup(link_page.content, "html.parser")
@@ -83,5 +100,7 @@ with open('data/artists.csv', newline='') as input_file:
                 for j in range(len(followingLinks[i])):
                     headerText = album_headers[i].text.replace(',', '') # remove commas
                     out_file.write(f'{row["Artist"]},{headerText},{followingLinks[i][j]},https://en.wikipedia.org{followingLinks[i][j]}\n')
+
+            print('✓')
 
 

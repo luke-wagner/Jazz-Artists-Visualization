@@ -23,7 +23,7 @@ print(Style.RESET_ALL, "\nTotal artists with no albums: " + str(len(no_albums)))
 
 user_input = input("\nOverride artists.txt? (y/n) ")
 
-if user_input != 'y':
+if user_input.lower() != 'y':
     quit()
 
 with open('artists.txt', 'w') as f:

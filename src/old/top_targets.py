@@ -1,8 +1,6 @@
 # This script outputs a list of common targets in the edge list that are not in top_100.txt
 
 import csv
-import requests
-from bs4 import BeautifulSoup
 
 # Open the sorted edge list CSV file
 with open('data/edges_sorted.csv', newline='') as input_file:
@@ -26,7 +24,7 @@ with open('data/edges_sorted.csv', newline='') as input_file:
 
     targets_sorted = sorted(targets.items(), key=lambda x:x[1],reverse=True)
     
-    with open('new_additions.txt', 'w') as out_file:
+    with open('suggested_additions.txt', 'w') as out_file:
         for target in targets_sorted:
             if target[1] > 15 and target[0] not in top_100:
                 out_file.write(target[0] + '\n')
