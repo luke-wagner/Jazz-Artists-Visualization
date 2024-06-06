@@ -23,6 +23,7 @@ if user_input.lower() == 'y':
     console_manager.console_out_off()
 else:
     console_manager.console_out_on()
+    print()
 
 pd.set_option("future.no_silent_downcasting", True)
 pytrends = TrendReq()
