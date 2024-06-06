@@ -125,5 +125,3 @@ with open('data/artists.csv', newline='') as input_file:
                 out_file.write(f'{row["Artist"]},{headerText},{followingLinks[i][j]},https://en.wikipedia.org{followingLinks[i][j]}\n')
 
         print('✓')
-
-

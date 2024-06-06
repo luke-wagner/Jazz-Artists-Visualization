@@ -8,9 +8,10 @@ import pandas as pd
 from colorama import Fore, Back, Style
 import sys
 
+import console_manager # custom module for console output
+
 print("\nCleaning albums.csv...")
-print(Fore.YELLOW, "\nWARNING: CONTENTS OF albums.csv WILL BE OVERWRITTEN")
-print(Style.RESET_ALL, end='')
+console_manager.write_warning("CONTENTS OF albums.csv WILL BE OVERWRITTEN")
 user_input = input("Proceed? (y/n) ",)
 
 # If automated, remaining input will specify what to print to console

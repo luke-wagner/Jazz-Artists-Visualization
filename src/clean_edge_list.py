@@ -5,9 +5,10 @@ from colorama import Fore, Back, Style
 import pandas as pd
 import sys
 
+import console_manager # custom module for console output
+
 print("\nCleaning edge list...")
-print(Fore.YELLOW, "\nWARNING: CONTENTS OF edge_list.csv WILL BE OVERWRITTEN")
-print(Style.RESET_ALL, end='')
+console_manager.write_warning("CONTENTS OF edge_list.csv WILL BE OVERWRITTEN")
 user_input = input("Proceed? (y/n) ",)
 
 # If automated, remaining input will specify what to print to console
