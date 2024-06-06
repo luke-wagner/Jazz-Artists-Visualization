@@ -1,4 +1,4 @@
-# A Jazz Artists Visualization 🎷
+# Jazz Artists Visualization 🎷
 
 ## Description:
 
@@ -19,18 +19,19 @@ This project was inspired by the project ["Visualizing Twitch Communities"](http
 
 ## Limitations:
 
-I tried to scale nodes by artist popularity, but Google search trend data might not be the best measure of popularity. I chose this metric because it was easy to program and seems to provide semi-accurate results. However, there may be more accurate metrics to explore.
+I tried to scale nodes by artist popularity using Google search trend, but this metric might not be the best measure of popularity. I chose this metric because it was easy to program and seems to provide semi-accurate results. However, there may be more accurate metrics to explore.
 
 ## How to Build the Project:
 
 I have included the node and edge lists used to create the graph in the data folder. However, if you wish to build out the data set programmatically, follow the instructions below.
 
 ### Instructions:
-1. Run env_config.sh to set up the python virtual environment and install necessary dependencies
-2. Run build.sh to execute all necessary python scripts. **This will take a while, the data generation process is LENGTHY.**
+1. Run `env_config.sh` to set up the python virtual environment and install necessary dependencies
+2. Run `build_manual.sh` or `build_automated.sh` to execute all necessary python scripts. **This will take a while; the data generation process is LENGTHY.**
 3. Check out the new files created in the `data` folder
 
-## Project Dependencies / Tools Used:
+## Tools Used:
 * [pandas (python library)](https://pandas.pydata.org/): Data analysis / manipulation
 * [BeautifulSoup (python library)](https://pypi.org/project/beautifulsoup4/): Web scraping
-* [Gephi](https://gephi.org/): Data Visualization
+* [Gephi](https://gephi.org/): Data visualization
+* Full list of dependencies listed in `docs/project-dependencies.md`
