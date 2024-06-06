@@ -34,4 +34,4 @@ I have included the node and edge lists used to create the graph in the data fol
 * [pandas (python library)](https://pandas.pydata.org/): Data analysis / manipulation
 * [BeautifulSoup (python library)](https://pypi.org/project/beautifulsoup4/): Web scraping
 * [Gephi](https://gephi.org/): Data visualization
-* Full list of dependencies listed in `docs/project-dependencies.md`
+* Full list of python dependencies listed in `docs/requirements.txt`
