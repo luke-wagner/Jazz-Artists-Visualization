@@ -25,9 +25,6 @@ def write_edges(edge_dict, writer):
         except:
             console_manager.write_error(str("PROBLEM WRITING EDGE '(" + key[0] + ", " + key[1] + "): " + str(value)))
 
-    edge_dict = {} # clear edge dict
-    return edge_dict
-
 # -------------------------------------------------------------------------------------------------
 # Tries to get personnel header from soup object. If found returns header, otherwise returns None
 def get_personnel_header(soup_obj):
@@ -102,6 +99,7 @@ with open('data/edge_list.csv', 'w', newline='') as csv_file:
         if currentArtist != lastArtist and lastArtist != "":
             # We are looking at a new artist, write existing edge_dict to edge_list.csv
             write_edges(edge_dict, writer)
+            edge_dict = {} # clear edge dict
 
         # ---------------------------------------------------------------------------------------
         # Get page content for album's wiki page
