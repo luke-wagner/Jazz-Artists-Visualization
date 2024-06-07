@@ -1,6 +1,12 @@
-# Build node list
-# Each node properties: Id, Importance
-# Must have Id as one property, requirement for Gephi
+# File: generate_node_list.py
+# Author: Luke Wagner
+# Description:
+# For each artist in artists.txt, create a node in node_list.csv
+#
+# Node properties: Id, Importance
+# Id: Artist name ("Id" is a required property for nodes in Gephi)
+# Importance: Google search popularity based on pytrends data from the last 5 years
+# -------------------------------------------------------------------------------------------------
 
 from pytrends.request import TrendReq
 import pandas as pd
@@ -25,7 +31,9 @@ else:
     console_manager.console_out_on()
     print()
 
+# required to avoid an error: https://stackoverflow.com/questions/77900971/pandas-futurewarning-downcasting-object-dtype-arrays-on-fillna-ffill-bfill
 pd.set_option("future.no_silent_downcasting", True)
+
 pytrends = TrendReq()
 
 with open('artists.txt', 'r') as f:
