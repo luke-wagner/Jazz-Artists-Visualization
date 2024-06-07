@@ -1,4 +1,4 @@
-# Jazz Artists Visualization 🎷
+# Jazz Artists Network Visualization 🎷
 
 ## Description:
 
@@ -6,7 +6,7 @@
 An exploration in how closely related jazz artists are through network graph visualization. This project uses nodes to represent individual artists, clustering them based on the number of albums they have collaborated on together. Node size is determined by Google search data on each artist from the last 5 years, with bigger nodes representing higher searches. Nodes are colored by their [modularity class](https://en.wikipedia.org/wiki/Modularity_(networks)).
 
 ### Data Generation:
-Node and edge lists were constructed from personnel listings on over 4000 unique albums. This project used [BeautifulSoup](https://pypi.org/project/beautifulsoup4/) to handle all web scraping.
+Node and edge lists were constructed from personnel listings on over 7200 unique albums. This project used [BeautifulSoup](https://pypi.org/project/beautifulsoup4/) to handle all web scraping.
 
 You can view the node and edge lists used to create this visualization in the `data` folder of the repository.
 
