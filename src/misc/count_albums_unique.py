@@ -17,20 +17,28 @@ if (len(rel_links) - len(full_links) != 0):
 
 links_sorted = sorted(full_links)
 
-print("Number of unique albums: " + str(len(links_sorted)))
+print("Number of unique links: " + str(len(links_sorted)))
+print("May not be an accurate counting of albums. Generate album_list.txt to get an accurate counting.\n")
 
 user_input = input("Generate album_list.txt? (y/n) ")
 
+album_titles = set()
+
 if user_input.lower() != 'y':
-    quit()
+    quit() # do not continue running script without user confirmation
+
+for link in links_sorted:
+    try:
+        page = requests.get(link)
+    except:
+        print(Fore.RED,"ERROR: COULD NOT READ LINK: " + link)
+        print(Style.RESET_ALL, end='')
+    soup = BeautifulSoup(page.content, "html.parser")
+    title = soup.find(id="firstHeading").get_text()
+    album_titles.add(title)
+
+print("\nNumber of unique albums: " + str(len(album_titles)))
 
 with open ('album_list.txt', 'w') as f:
-    for link in links_sorted:
-        try:
-            page = requests.get(link)
-        except:
-            print(Fore.RED,"ERROR: COULD NOT READ LINK: " + link)
-            print(Style.RESET_ALL, end='')
-        soup = BeautifulSoup(page.content, "html.parser")
-        title = soup.find(id="firstHeading").get_text()
+    for title in sorted(album_titles):
         f.write(title + '\n')

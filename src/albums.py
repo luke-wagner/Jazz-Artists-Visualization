@@ -27,14 +27,16 @@ if user_input.lower() == 'y':
 else:
     console_manager.console_out_off()
 
+# Read in content of artists.csv into rows array
+with open('data/artists.csv', newline='') as input_file:
+    reader = csv.DictReader(input_file)
+    rows = list(reader)
+
+# Loop through each row in artists.csv
 with open('data/albums.csv', 'w') as out_file:
     out_file.write('Artist,Header,Relative Link,Full Link\n') # write header to albums.csv
 
-with open('data/artists.csv', newline='') as input_file:
-    reader = csv.DictReader(input_file)
-
-    # Loop through each row in artists.csv
-    for row in reader:
+    for row in rows:
         print("Looking at albums for: " + row['Artist'] + ' ', end='')
 
         page = requests.get(row['Link']) # get page content for artist's wiki
@@ -46,17 +48,13 @@ with open('data/artists.csv', newline='') as input_file:
 
         album_headers = []
 
-        # Get all headers relating to artist albums. Search first for "album", then "as leader", then "discography"
+        # Get all headers relating to artist albums. Search for "album" or "as leader" or "as sideman"
 
         for header in headers:
-            if 'album' in header.text.lower():
+            if 'album' in header.text.lower() or 'as leader' in header.text.lower() or 'as sideman' in header.text.lower():
                 album_headers.append(header)
-        
-        if album_headers == []:
-            for header in headers:
-                if 'as leader' in header.text.lower():
-                    album_headers.append(header)
 
+        # In the case no headers were found, albums may be listed under "discography"
         if album_headers == []:
             for header in headers:
                 if 'discography' in header.text.lower():
@@ -88,6 +86,9 @@ with open('data/artists.csv', newline='') as input_file:
             childSoup = BeautifulSoup(html, "html.parser") # create soup obj for this html block
             for link_item in childSoup.find_all('a'):
                 link = link_item.get('href')
+
+                if link == None:
+                    continue
                 
                 # if album name contains ',', this will break the csv file, so replace with '®'
                 link = link.replace(',', '®')
