@@ -31,45 +31,52 @@ else:
     console_manager.console_out_on()
     print()
 
-# required to avoid an error: https://stackoverflow.com/questions/77900971/pandas-futurewarning-downcasting-object-dtype-arrays-on-fillna-ffill-bfill
+# Required to avoid an error: https://stackoverflow.com/questions/77900971/pandas-futurewarning-downcasting-object-dtype-arrays-on-fillna-ffill-bfill
 pd.set_option("future.no_silent_downcasting", True)
 
-pytrends = TrendReq()
+# Create pytrends object
+pytrend_obj = TrendReq()
 
+# Read artists from artists.txt into artists array
 with open('artists.txt', 'r') as f:
     artists = [line.strip() for line in f]
 
-# Code block 1
-with open('data/node_list.csv', 'w') as f:
-    f.write("Id,Importance\n")
+node_list = {} # use dict to store nodes and node info
 
-    for artist in artists:
-        querySuccessful = False
-        while querySuccessful == False:
-            try:
-                pytrends.build_payload(kw_list=[artist], timeframe='today 5-y')
-                df = pytrends.interest_over_time()
-            except:
-                time.sleep(1)
-                continue
-
-            querySuccessful = True
-
+# Loop over each artist, and store their name and importance to the node_list dict
+loop_counter = 0 # keep track of how many times we've looped
+for artist in artists:
+    # Keep trying to get data until we query is successful
+    querySuccessful = False
+    while querySuccessful == False:
         try:
-            values = df[artist].tolist()
-            sum_values = sum(values)
+            # get trend data, store to pandas dataframe, df
+            pytrend_obj.build_payload(kw_list=[artist], timeframe='today 5-y')
+            df = pytrend_obj.interest_over_time()
         except:
-            console_manager.write_error(str("PROBLEM READING DATA FOR: " + artist + "\n"))
-            sum_values = 100
+            time.sleep(1)
+            continue
 
-        print(df.head())
-        print("\nSum of values: " + str(sum_values) + "\n")
+        querySuccessful = True
 
-        f.write(artist + "," + str(sum_values) + "\n")
+    # Trends data is stored in df, try to extract the sum of values
+    try:
+        values = df[artist].tolist()
+        sum_values = sum(values)
+    except:
+        console_manager.write_error(str("PROBLEM READING DATA FOR: " + artist + "\n"))
+        sum_values = 100 # give a default importance value of 100 for this artist
 
-# Code block 2
-df = pd.read_csv('data/node_list.csv',on_bad_lines='skip', encoding='latin-1')
+    # For debugging
+    print(df.head())
+    print("\nSum of values: " + str(sum_values) + "\n")
+
+    # Add entry to node_list, use loop counter as dict key
+    node_list[loop_counter] = [artist, sum_values]
+
+    loop_counter += 1
+
+# Node list built, now use df to sort by importance then write to node_list.csv
+df = pd.DataFrame.from_dict(node_list, orient='index', columns=['Id','Importance'])
 df = df.sort_values(['Importance', 'Id'], ascending=[False, True])
 df.to_csv('data/node_list.csv', index=False)
-
-# TODO: Combine code block 1 and code block 2
