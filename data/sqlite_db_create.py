@@ -12,12 +12,12 @@ conn = sqlite3.connect(DB_FILE)
 
 cursor = conn.cursor()
 
-cursor.execute('''
-    CREATE TABLE node_list (
-        artist_name TEXT PRIMARY KEY NOT NULL,
-        importance INT
-    );
-''')
+# Read create statements from file
+with open('data/create_db.sql', 'r') as f:
+    create_statements = f.read().split(';')
+
+for statement in create_statements:
+    cursor.execute(statement)
 
 conn.commit()
 conn.close()
