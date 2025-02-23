@@ -13,6 +13,7 @@ import pandas as pd
 from colorama import Fore, Back, Style
 import time
 import sys
+import sqlite3
 
 import console_manager # custom module for console output
 
@@ -20,10 +21,10 @@ print("\nGenerating node list...\n")
 user_input = input("Hide console_output? (recommended) (y/n) ")
 
 # If automated, remaining input will specify what to print to console
-remaining_input = sys.stdin.read()
-if remaining_input != '':
-    remaining_input = remaining_input.strip()
-    print(remaining_input)
+if not sys.stdin.isatty():  # Checks if input is coming from a file/pipe
+    remaining_input = sys.stdin.read().strip()
+    if remaining_input:
+        print(remaining_input)
 
 if user_input.lower() == 'y':
     console_manager.console_out_off()
@@ -40,6 +41,19 @@ pytrend_obj = TrendReq()
 # Read artists from artists.txt into artists array
 with open('artists.txt', 'r') as f:
     artists = [line.strip() for line in f]
+
+# Query db for existing nodes, only get trend data for new nodes
+conn = sqlite3.connect('data/main.db')
+cursor = conn.cursor()
+cursor.execute("SELECT DISTINCT artist_name FROM node_list")
+existing_nodes = cursor.fetchall()
+conn.close()
+
+# Remove existing nodes from artists array
+for node in existing_nodes:
+    artists.remove(node[0])
+
+print("New nodes to add: " + str(len(artists)) + "\n")
 
 node_list = {} # use dict to store nodes and node info
 
@@ -79,4 +93,18 @@ for artist in artists:
 # Node list built, now use df to sort by importance then write to node_list.csv
 df = pd.DataFrame.from_dict(node_list, orient='index', columns=['Id','Importance'])
 df = df.sort_values(['Importance', 'Id'], ascending=[False, True])
+
+# Write to csv file
 df.to_csv('data/node_list.csv', index=False)
+
+# In addition to writing to csv file, insert rows into sqlite db (node_list table)
+# Once sqlite db is fully functional, csv functionality will be deleted #TODO
+conn = sqlite3.connect('data/main.db')
+
+cursor = conn.cursor()
+
+for index, row in df.iterrows():
+    cursor.execute("INSERT INTO node_list (artist_name, importance) VALUES (?, ?)", (row['Id'], row['Importance']))
+
+conn.commit()
+conn.close()

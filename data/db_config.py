@@ -1,0 +1,1 @@
+DB_FILE = "data/main.db" # Where to store the database
