@@ -12,9 +12,23 @@ CREATE TABLE IF NOT EXISTS "artist_wikis" (
 	"discography_found"	INTEGER NOT NULL CHECK("discography_found" IN (0, 1)),
 	PRIMARY KEY("artist_name")
 );
+CREATE TABLE IF NOT EXISTS "decode" (
+	"decode_type_id"	TEXT NOT NULL,
+	"decode_value"	TEXT NOT NULL,
+	"short_desc"	TEXT,
+	"long_desc"	TEXT,
+	PRIMARY KEY("decode_type_id","decode_value")
+);
 CREATE TABLE IF NOT EXISTS "node_list" (
 	"artist_name"	TEXT NOT NULL,
 	"importance"	INT,
 	PRIMARY KEY("artist_name")
+);
+CREATE TABLE IF NOT EXISTS "script_progress" (
+	"script_name"	TEXT,
+	"process_identifier"	TEXT NOT NULL,
+	"key"	TEXT NOT NULL,
+	"value"	INTEGER NOT NULL,
+	PRIMARY KEY("process_identifier","key")
 );
 COMMIT;
