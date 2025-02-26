@@ -140,7 +140,7 @@ with open('data/artists.csv', newline='') as input_file:
 conn = sqlite3.connect('data/main.db')
 conn.row_factory = sqlite3.Row  # This makes the rows behave like dictionaries
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM artist_wikis")
+cursor.execute("SELECT * FROM artists")
 rows = [dict(row) for row in cursor.fetchall()]
 
 # Loop through each row in artists.csv

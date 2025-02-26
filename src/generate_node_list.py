@@ -1,10 +1,8 @@
 # File: generate_node_list.py
 # Author: Luke Wagner
 # Description:
-# For each artist in artists.txt, create a node in node_list.csv
+# For each artist in artists.txt, store artist name and importance to artists table
 #
-# Node properties: Id, Importance
-# Id: Artist name ("Id" is a required property for nodes in Gephi)
 # Importance: Google search popularity based on pytrends data from the last 5 years
 # -------------------------------------------------------------------------------------------------
 
@@ -45,7 +43,7 @@ with open('artists.txt', 'r') as f:
 # Query db for existing nodes, only get trend data for new nodes
 conn = sqlite3.connect('data/main.db')
 cursor = conn.cursor()
-cursor.execute("SELECT DISTINCT artist_name FROM node_list")
+cursor.execute("SELECT DISTINCT artist_name FROM artists WHERE importance IS NOT NULL")
 existing_nodes = cursor.fetchall()
 conn.close()
 
@@ -55,9 +53,7 @@ for node in existing_nodes:
 
 print("New nodes to add: " + str(len(artists)) + "\n")
 
-node_list = {} # use dict to store nodes and node info
-
-# Loop over each artist, and store their name and importance to the node_list dict
+# Loop over each artist, store name and importance to artists table
 loop_counter = 0 # keep track of how many times we've looped
 for artist in artists:
     # Keep trying to get data until we query is successful
@@ -79,32 +75,24 @@ for artist in artists:
         sum_values = sum(values)
     except:
         console_manager.write_error(str("PROBLEM READING DATA FOR: " + artist + "\n"))
-        sum_values = 100 # give a default importance value of 100 for this artist
+        sum_values = -1 # give a value of -1, will be easy to debug later
 
     # For debugging
     print(df.head())
     print("\nSum of values: " + str(sum_values) + "\n")
 
-    # Add entry to node_list, use loop counter as dict key
-    node_list[loop_counter] = [artist, sum_values]
+    # Insert into artists table
+    conn = sqlite3.connect('data/main.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO artists (artist_name, importance)
+        VALUES (?, ?)
+        ON CONFLICT(artist_name) DO UPDATE SET
+            artist_name = excluded.artist_name,
+            importance = excluded.importance;
+    """, (artist, sum_values))
+
+    conn.commit()
+    conn.close()
 
     loop_counter += 1
-
-# Node list built, now use df to sort by importance then write to node_list.csv
-df = pd.DataFrame.from_dict(node_list, orient='index', columns=['Id','Importance'])
-df = df.sort_values(['Importance', 'Id'], ascending=[False, True])
-
-# Write to csv file
-df.to_csv('data/node_list.csv', index=False)
-
-# In addition to writing to csv file, insert rows into sqlite db (node_list table)
-# Once sqlite db is fully functional, csv functionality will be deleted #TODO
-conn = sqlite3.connect('data/main.db')
-
-cursor = conn.cursor()
-
-for index, row in df.iterrows():
-    cursor.execute("INSERT INTO node_list (artist_name, importance) VALUES (?, ?)", (row['Id'], row['Importance']))
-
-conn.commit()
-conn.close()

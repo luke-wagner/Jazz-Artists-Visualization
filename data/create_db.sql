@@ -6,10 +6,11 @@ CREATE TABLE IF NOT EXISTS "albums" (
 	"full_link"	TEXT NOT NULL,
 	PRIMARY KEY("artist_name","header","rel_link")
 );
-CREATE TABLE IF NOT EXISTS "artist_wikis" (
+CREATE TABLE IF NOT EXISTS "artists" (
 	"artist_name"	TEXT NOT NULL,
-	"link"	TEXT NOT NULL,
-	"discography_found"	INTEGER NOT NULL CHECK("discography_found" IN (0, 1)),
+	"importance"	INTEGER,
+	"link"	TEXT,
+	"discography_found"	INTEGER CHECK("discography_found" IN (0, 1)),
 	PRIMARY KEY("artist_name")
 );
 CREATE TABLE IF NOT EXISTS "decode" (
@@ -18,11 +19,6 @@ CREATE TABLE IF NOT EXISTS "decode" (
 	"short_desc"	TEXT,
 	"long_desc"	TEXT,
 	PRIMARY KEY("decode_type_id","decode_value")
-);
-CREATE TABLE IF NOT EXISTS "node_list" (
-	"artist_name"	TEXT NOT NULL,
-	"importance"	INT,
-	PRIMARY KEY("artist_name")
 );
 CREATE TABLE IF NOT EXISTS "script_progress" (
 	"script_name"	TEXT,
