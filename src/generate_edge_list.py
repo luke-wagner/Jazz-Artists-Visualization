@@ -8,7 +8,6 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
-from colorama import Fore, Back, Style
 import sys
 
 import console_manager # custom module for console output
@@ -29,7 +28,11 @@ def write_edges(edge_dict, writer):
 # Tries to get personnel header from soup object. If found returns header, otherwise returns None
 def get_personnel_header(soup_obj):
     # Try to find personnel header
+    # Update as of Feb 2025, wiki page structure has changed
+    # Personnel header is now in h2 tag, try both span and h2 tags
     personnel_header = soup_obj.find('span', id='Personnel')
+    if personnel_header is None:
+        personnel_header = soup_obj.find('h2', id='Personnel')
 
     if personnel_header is None:
         return None
@@ -69,10 +72,10 @@ print("\nGenerating edge list...\n")
 user_input = input("Hide console output? (recommended) (y/n) ")
 
 # If automated, remaining input will specify what to print to console
-remaining_input = sys.stdin.read()
-if remaining_input != '':
-    remaining_input = remaining_input.strip()
-    print(remaining_input)
+if not sys.stdin.isatty():  # Checks if input is coming from a file/pipe
+    remaining_input = sys.stdin.read().strip()
+    if remaining_input:
+        print(remaining_input)
 
 if user_input.lower() == 'y':
     console_manager.console_out_off()
@@ -93,14 +96,6 @@ with open('data/edge_list.csv', 'w', newline='') as csv_file:
 
     # Loop through each row in albums.csv
     for row in rows:
-        # We only want to write to edge_list.csv when the artist we are looking at changes
-        # This will prevent writing duplicate edges each of weight 1
-        currentArtist = row['Artist']
-        if currentArtist != lastArtist and lastArtist != "":
-            # We are looking at a new artist, write existing edge_dict to edge_list.csv
-            write_edges(edge_dict, writer)
-            edge_dict = {} # clear edge dict
-
         # ---------------------------------------------------------------------------------------
         # Get page content for album's wiki page
         # Use this to look for personnel on album
@@ -125,26 +120,33 @@ with open('data/edge_list.csv', 'w', newline='') as csv_file:
         # Print album title (useful for debugging)
         print(album_title)
         print("----------------------------------------")
+
+        collaborators = []
+
+        # Build out the collaborators array, loop over each following list item under personnel header
+        # The list items should contain people's names. These are the collaborators of the album
         for list in followingLists:
-            # Loop over list items in each following list. Should contain people's names. These are the collaborators of the album
             for list_item in list.children:
                 line_text = list_item.text # get text from list item
 
-                people = people_from_line_text(line_text) # personnel array for this list
-                if len(people) == 0: # could happen with empty line
+                people_in_line = people_from_line_text(line_text) # personnel array for this list
+                if len(people_in_line) == 0: # could happen with empty line
                     continue
 
-                for person in people:
-                    print(person) # for debugging
+                collaborators.extend(people_in_line)
+        
+        # Generate edges from collaborators array
+        for person1 in collaborators:
+            print(person1) # for debugging
 
-                    if person == row['Artist']: # don't allow loops in edge list
-                        continue
+            for person2 in collaborators:
+                if person1 == person2:
+                    continue
 
-                    # Add edge to edge list or if it already exists, increment its weight
-                    if edge_dict.get((row['Artist'], person)) == None:
-                        edge_dict[(row['Artist'], person)] = 1
-                    else:
-                        edge_dict[(row['Artist'], person)] += 1
+                edge = (person1, person2)
+                #print(edge)
+
+                # TODO: Insert edge into edges table
         print()
 
         lastArtist = row['Artist'] # set last artist to current artist for next iteration

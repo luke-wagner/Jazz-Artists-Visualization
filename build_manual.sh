@@ -7,7 +7,7 @@ echo "Excecuting scripts..."
 python src/generate_node_list.py    # build out node list
 python src/link_wikis.py            # generate all artist wiki links and put in artists.csv
 python src/albums.py                # for each artist, find links to all their albums and put in albums.csv
-python src/clean_albums.py          # sort albums.csv and remove duplicate lines
+#python src/clean_albums.py         # sort albums.csv and remove duplicate lines - not necessary anymore
 python src/generate_edge_list.py    # generate edge list from albums.csv
 python src/clean_edge_list.py       # sort edge list and remove edges to non-existent nodes
 

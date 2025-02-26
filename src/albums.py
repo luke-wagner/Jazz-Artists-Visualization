@@ -169,6 +169,7 @@ with open('data/albums.csv', 'w') as out_file:
             print('✓\n- Albums already catalogued for this artist')
             continue
 
+        # TODO: Consider the case where row["link"] is null
         page = requests.get(row["link"]) # get page content for artist's wiki
         soup = BeautifulSoup(page.content, "html.parser") # create soup obj
 
@@ -197,7 +198,7 @@ with open('data/albums.csv', 'w') as out_file:
                     INSERT INTO albums (artist_name, header, rel_link, full_link)
                     VALUES ('{row["artist_name"]}', '{headerText}', '{link}', 'https://en.wikipedia.org{link}')
                     ''')
-                except sqlite3.IntegrityError: # album already exists
+                except sqlite3.IntegrityError: # album already exists, do nothing
                     pass
 
                 conn.commit()
